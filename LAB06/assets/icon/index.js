@@ -1,6 +1,5 @@
 const icons = {
-    "delete": require('./delete.png'),
-    "update": require('./update.png'),
+    add: require('./add.png')
 }
 
 export default icons

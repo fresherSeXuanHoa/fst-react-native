@@ -1,49 +1,52 @@
-import { useEffect, useState } from 'react';
-import { Button, FlatList, StyleSheet, TextInput, View } from 'react-native';
-import ListItem from './src/components/ListItem';
-import todoList from './src/database/todoList';
+import React, { useState } from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import Header from './src/components/Header';
+import ToDo from './src/components/Todo';
+import Form from './src/components/Form';
 
 export default function App() {
   const [work, setWork] = useState('')
-  const [todo, setTodo] = useState([...todoList])
+  const [todo, setTodo] = useState([])
 
-  console.log(todo);
-
-  useEffect(() => { }, [todo])
+  const handleAddToDo = () => {
+    setTodo([...todo, work])
+    setWork('')
+    Keyboard.dismiss()
+  }
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', margin: 10 }}>
-        <TextInput style={styles.inputWork} placeholder='Enter work here...' value={work} onChangeText={setWork} />
-        <Button style={styles.addWork} title='Add Todo' onPress={todo => setTodo([...todo])} />
+      <StatusBar style="dark" />
+      {/* Header */}
+      <Header header="To Do List" />
+
+      {/* To Do List */}
+      <View style={styles.todoList}>
+        <FlatList
+          data={todo}
+          keyExtractor={item => item}
+          renderItem={({ item }) => <ToDo todo={item} />}
+        />
       </View>
 
-      <FlatList
-        style={{ width: '100%' }}
-        data={todoList}
-        renderItem={({ item }) => <View>
-          <ListItem todo={item} />
-        </View>}
-      />
+      {/* Form */}
+      <Form work={work} setWork={setWork} todo={todo} setTodo={handleAddToDo} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
     flex: 1,
+    margin: 10,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  inputWork: {
+  todoList: {
+    width: '100%',
     flex: 1,
-    borderColor: '#2d3436',
-    borderWidth: 1,
-    padding: 10,
-  },
-  addWork: {
-    margin: 5,
+    marginVertical: 10,
   }
 });
